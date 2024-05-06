@@ -6,33 +6,45 @@ from aiohttp.web_routedef import RouteTableDef
 
 hash_routes = RouteTableDef()
 
-VALIDATION_ERROR_MESSAGE = "Missing field in the incoming JSON: '{field}'"
-EMPTY_FIELD_ERROR_MESSAGE = "Got empty field: {field}"
+VALIDATION_ERROR_MESSAGE = "Missing field of the incoming JSON: '{field}'"
+WRONG_FIELD_TYPE_ERROR_MESSAGE = (
+    "Expected {expected_type} type of {field} "
+    "field, got {received_type} instead"
+)
+HASH_ENDPOINT_REQUIRED_FIELD = "string"
 
 
 @hash_routes.get("/healthcheck")
 async def healthcheck(request: Request):
+    """
+    Check if server is working
+    """
     return web.json_response(data={}, status=200)
 
 
 @hash_routes.post("/hash")
-async def hash(request: Request, required_field="string"):
+async def hash(request: Request):
+    """
+    SHA256 hash input string
+    """
     data = await request.json()
-    if required_field not in data:
+    if HASH_ENDPOINT_REQUIRED_FIELD not in data:
         return web.json_response(
             data={
                 "validation_errors": VALIDATION_ERROR_MESSAGE.format(
-                    field=required_field
+                    field=HASH_ENDPOINT_REQUIRED_FIELD
                 )
             },
             status=400,
         )
-    string_value = data[required_field]
+    string_value = data[HASH_ENDPOINT_REQUIRED_FIELD]
     if not isinstance(string_value, str):
         return web.json_response(
             data={
-                "validation_errors": EMPTY_FIELD_ERROR_MESSAGE.format(
-                    field=required_field
+                "validation_errors": WRONG_FIELD_TYPE_ERROR_MESSAGE.format(
+                    expected_type=str,
+                    field=HASH_ENDPOINT_REQUIRED_FIELD,
+                    received_type=type(string_value),
                 )
             },
             status=400,
