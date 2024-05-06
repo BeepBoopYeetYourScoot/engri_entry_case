@@ -1,10 +1,7 @@
 import hashlib
 
-import aiohttp.client
 import pytest
-import pytest_aiohttp
 from aiohttp import web
-from aiohttp.web_response import Response
 
 from api.router import setup_routes
 

@@ -6,14 +6,13 @@ from aiohttp.web_routedef import RouteTableDef
 
 hash_routes = RouteTableDef()
 
+VALIDATION_ERROR_MESSAGE = "Missing field in the incoming JSON: '{field}'"
+EMPTY_FIELD_ERROR_MESSAGE = "Got empty field: {field}"
+
 
 @hash_routes.get("/healthcheck")
 async def healthcheck(request: Request):
     return web.json_response(data={}, status=200)
-
-
-VALIDATION_ERROR_MESSAGE = "Missing field in the incoming JSON: '{field}'"
-EMPTY_FIELD_ERROR_MESSAGE = "Got empty field: {field}"
 
 
 @hash_routes.post("/hash")
