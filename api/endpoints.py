@@ -23,7 +23,7 @@ async def healthcheck(request: Request):
 
 
 @hash_routes.post("/hash")
-async def hash(request: Request):
+async def hashing(request: Request):
     """
     SHA256 hash input string
     """
